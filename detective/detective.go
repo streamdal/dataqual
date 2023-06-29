@@ -173,10 +173,10 @@ func matchTimestampRFC3339(val string, op MatchOperator, args ...string) (bool, 
 		return false, errors.Wrap(err, "unable to parse argument into timestamp")
 	}
 
-	isOlder := tsValue.UTC().Before(time.Now().UTC().Add(-tsArg))
+	return false, fmt.Errorf("checking if %s is older than %s", tsValue.UTC().Format(time.RFC3339), time.Now().UTC().Add(-tsArg).Format(time.RFC3339))
 
-	return false, fmt.Errorf("isolder: %v", isOlder)
-
+	//isOlder := tsValue.UTC().Before(time.Now().UTC().Add(-tsArg))
+	//
 	//return isOlder && op == OlderThanSeconds, nil
 }
 
