@@ -1,6 +1,7 @@
 package detective
 
 import (
+	"fmt"
 	"math"
 
 	"strconv"
@@ -159,7 +160,7 @@ func matchTimestampRFC3339(val string, op MatchOperator, args ...string) (bool, 
 	tsValue, err := time.Parse(time.RFC3339, val)
 	if err != nil {
 		// Un-parsable, not a match
-		return false, nil
+		return false, errors.Wrapf(err, "unable to parse timestamp")
 	}
 	if err == nil && op == IsMatch {
 		// Only matching on format, not value
@@ -174,7 +175,9 @@ func matchTimestampRFC3339(val string, op MatchOperator, args ...string) (bool, 
 
 	isOlder := tsValue.UTC().Before(time.Now().UTC().Add(-tsArg))
 
-	return isOlder && op == OlderThanSeconds, nil
+	return false, fmt.Errorf("isolder: %v", isOlder)
+
+	//return isOlder && op == OlderThanSeconds, nil
 }
 
 func matchTimestampISO8601(val string, op MatchOperator, args ...string) (bool, error) {
