@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/tetratelabs/wazero"
@@ -141,6 +142,7 @@ func createWASMInstance(wasmBytes []byte) (api.Module, error) {
 	cfg := wazero.NewModuleConfig().
 		WithStderr(io.Discard).
 		WithStdout(io.Discard).
+		WithNanotime(func() int64 { return time.Now().UTC().UnixNano() }, 1000).
 		WithStartFunctions("") // We don't need _start() to be called for our purposes
 
 	mod, err := r.InstantiateWithConfig(ctx, wasmBytes, cfg)
